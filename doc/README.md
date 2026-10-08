@@ -138,3 +138,109 @@ UDP port 67 appeared in the output:
 
 This confirms that the DHCP server is active and listening for client requests.
 
+## Checkpoint 3 - Testing the DHCP Client c1
+
+
+
+The virtual machine `c1` was created and configured as a DHCP client within the internal network `intnet`.
+
+
+
+To check the IP address obtained, the following command was used:
+
+
+
+ip -br a
+
+
+
+The client received the address:
+
+
+
+192.168.57.20/24
+
+
+
+This address falls within the range configured on the DHCP server:
+
+
+
+192.168.57.20 - 192.168.57.50
+
+
+
+Next, the messages exchanged between the client and the DHCP server were reviewed using:
+
+
+
+sudo cat /var/log/syslog | grep dhcpd
+
+
+
+The following messages were verified:
+
+
+
+DHCPDISCOVER
+
+DHCPOFFER
+
+DHCPREQUEST
+
+DHCPACK
+
+
+
+Finally, the server’s lease file was reviewed:
+
+
+
+sudo cat /var/lib/dhcp/dhcpd.leases
+
+
+
+This file records the assignment of the address 192.168.57.20 to client c1.
+
+## Checkpoint 4 - DHCP Reservation for Printer
+
+
+
+A virtual machine named `printer` was configured within the internal network `intnet`.
+
+
+
+Its network interface was assigned a known MAC address:
+
+
+
+08:00:27:A1:B2:C3
+
+
+
+A reservation was created on the DHCP server so that this MAC address always receives the following IP address:
+
+
+
+192.168.57.111
+
+
+
+The configuration was verified on `printer` using:
+
+
+
+ip -br a
+
+
+
+The internal network interface successfully received:
+
+
+
+192.168.57.111/24
+
+
+
+This confirms that the MAC-based DHCP reservation is working correctly.
+
